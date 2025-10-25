@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>הפניה ל-AR</title>
+  <style>
+    body {
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      line-height: 1.6;
+    }
+    strong {
+      color: #007aff;
+    }
+    code {
+      background-color: #f1f1f1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      direction: ltr;
+      display: inline-block;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <a id="ar-link" rel="ar" href="/models/finishLine.usdz" style="display: none;"><img src="" alt=""></a>
+  
+  <div id="loading-message">...טוען חווית AR</div>
+
+  <script>
+    (function() {
+      const origin = window.location.origin;
+      const userAgent = navigator.userAgent;
+      const loadingDiv = document.getElementById('loading-message');
+
+      const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+      const isAndroid = /Android/.test(userAgent);
+
+      // Link to the finishLine.glb model for Android
+      const androidIntentUrl = `intent://arvr.google.com/scene-viewer/1.0?file=${origin}/models/finishLine.glb&mode=ar_preferred&title=קו%20סיום&resizable=1#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${origin}/ar-fallback;end;`;
+
+      if (isIOS) {
+        // Attempt to "click" the hidden link for iOS
+        document.getElementById('ar-link').click();
+      } else if (isAndroid) {
+        // Redirect Android to the intent URL
+        window.location.href = androidIntentUrl;
+      } else {
+        // Fallback for desktop
+        loadingDiv.innerHTML = `<p>AR is only available on supported mobile devices.</p>`;
+      }
+
+      // This timeout is a NECESSARY safety net.
+      // It does NOT cause the problem. It shows a helpful message if the automatic launch has already been blocked by the browser.
+      setTimeout(() => {
+        if (loadingDiv.textContent.includes('טוען חווית AR')) {
+          let recommendedBrowser = isIOS ? '<strong>דפדפן ספארי (Safari) או גוגל כרום</strong>' : '<strong>אפליקציית גוגל (Google App)</strong>';
+          loadingDiv.innerHTML = `
+            <h2>הטעינה האוטומטית לא הצליחה</h2>
+            <p>נסה לסגור את הדפדפן ואז לסרוק מחדש את קוד ה-QR, או העתק את הקישור ופתח אותו ב${recommendedBrowser}.</p>
+            <p><code>${window.location.href}</code></p>
+          `;
+        }
+      }, 3000); // Waits 3 seconds before showing the fallback message
+
+    })();
+  </script>
+</body>
+</html>
