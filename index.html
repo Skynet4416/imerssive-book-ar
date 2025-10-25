@@ -25,7 +25,7 @@
   </style>
 </head>
 <body>
-  <a id="ar-link" rel="ar" href="/models/finishLine.usdz" style="display: none;"><img src="" alt=""></a>
+  <a id="ar-link" rel="ar" href="models/finishLine.usdz" style="display: none;"><img src="" alt=""></a>
   
   <div id="loading-message">...טוען חווית AR</div>
 
@@ -34,13 +34,11 @@
       const origin = window.location.origin;
       const userAgent = navigator.userAgent;
       const loadingDiv = document.getElementById('loading-message');
-
+      const basePath = "/imerssive-book-ar/";
       const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
       const isAndroid = /Android/.test(userAgent);
 
-      // Link to the finishLine.glb model for Android
-      const androidIntentUrl = `intent://arvr.google.com/scene-viewer/1.0?file=${origin}/models/finishLine.glb&mode=ar_preferred&title=קו%20סיום&resizable=1#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${origin}/ar-fallback;end;`;
-
+      const androidIntentUrl = `intent://arvr.google.com/scene-viewer/1.0?file=${origin}${basePath}models/finishLine.glb&mode=ar_preferred&title=קו%20סיום&resizable=1#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${origin}/ar-fallback;end;`;
       if (isIOS) {
         // Attempt to "click" the hidden link for iOS
         document.getElementById('ar-link').click();
